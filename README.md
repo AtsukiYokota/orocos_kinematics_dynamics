@@ -6,6 +6,7 @@
 
 ## Ubuntu 20.04
 ```
+sudo apt install libeigen3-dev
 git submodule update --init
 cd orocos_kdl
 mkdir build
