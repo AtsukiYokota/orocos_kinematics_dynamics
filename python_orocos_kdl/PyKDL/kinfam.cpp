@@ -77,10 +77,10 @@ void init_kinfam(pybind11::module &m)
     joint.def(py::init<Joint::JointType, double, double, double, double, double>(),
               py::arg("type")=Joint::JointType::Fixed, py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
-    joint.def(py::init<std::string, Vector, Vector, Joint::JointType, double, double, double, double, double>(),
+    joint.def(py::init<std::string, KDL::Vector, KDL::Vector, Joint::JointType, double, double, double, double, double>(),
               py::arg("name"), py::arg("origin"), py::arg("axis"), py::arg("type"), py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
-    joint.def(py::init<Vector, Vector, Joint::JointType, double, double, double, double, double>(),
+    joint.def(py::init<KDL::Vector, KDL::Vector, Joint::JointType, double, double, double, double, double>(),
               py::arg("origin"), py::arg("axis"), py::arg("type"), py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
     joint.def(py::init<const Joint&>());
@@ -123,15 +123,15 @@ void init_kinfam(pybind11::module &m)
     });
     rotational_inertia.def(double() * py::self);
     rotational_inertia.def(py::self + py::self);
-    rotational_inertia.def(py::self * Vector());
+    rotational_inertia.def(py::self * KDL::Vector());
 
 
     // --------------------
     // RigidBodyInertia
     // --------------------
     py::class_<RigidBodyInertia> rigid_body_inertia(m, "RigidBodyInertia");
-    rigid_body_inertia.def(py::init<double, const Vector&, const RotationalInertia&>(),
-                           py::arg("m")=0, py::arg_v("oc", Vector::Zero(), "Vector.Zero"),
+    rigid_body_inertia.def(py::init<double, const KDL::Vector&, const RotationalInertia&>(),
+                           py::arg("m")=0, py::arg_v("oc", KDL::Vector::Zero(), "Vector.Zero"),
                            py::arg_v("Ic", RotationalInertia::Zero(), "RigidBodyInertia.Zero"));
     rigid_body_inertia.def_static("Zero", &RigidBodyInertia::Zero);
     rigid_body_inertia.def("RefPoint", &RigidBodyInertia::RefPoint);
@@ -249,7 +249,7 @@ void init_kinfam(pybind11::module &m)
     });
 
     m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero);
-    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint);
+    m.def("changeRefPoint", (void (*)(const Jacobian&, const KDL::Vector&, Jacobian&)) &KDL::changeRefPoint);
     m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase);
     m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame);
 
@@ -513,5 +513,5 @@ void init_kinfam(pybind11::module &m)
     // ChainIdSolver_RNE
     // ------------------------------
     py::class_<ChainIdSolver_RNE, ChainIdSolver> chain_id_solver_RNE(m, "ChainIdSolver_RNE");
-    chain_id_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
+    chain_id_solver_RNE.def(py::init<const Chain&, KDL::Vector>(), py::arg("chain"), py::arg("grav"));
 }
